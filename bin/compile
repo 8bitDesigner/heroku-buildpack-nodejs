@@ -186,6 +186,9 @@ run_npm "install --production"
 run_npm "rebuild"
 echo "Dependencies installed" | indent
 
+# Copy lua into bin directory
+build_lua
+
 echo "-----> Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
 echo "export PATH=\"\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\"" > $BUILD_DIR/.profile.d/nodejs.sh
