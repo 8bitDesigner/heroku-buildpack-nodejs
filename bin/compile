@@ -18,6 +18,8 @@ S3_BUCKET="heroku-buildpack-nodejs"
 BUILD_DIR=$1
 CACHE_DIR=$2
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
+BIN_DIR=`cd $(dirname $0); pwd` # absolute path
+OPT_DIR=`cd "$BIN_DIR/../opt"; pwd`
 
 function error() {
   echo " !     $*" >&2
@@ -97,6 +99,17 @@ function package_download() {
   mkdir -p $location
   package="http://${S3_BUCKET}.s3.amazonaws.com/$engine-$version.tgz"
   curl $package -s -o - | tar xzf - -C $location
+}
+
+function build_lua() {
+  cd $BUILD_DIR
+
+  mkdir -p bin
+  mkdir -p packages
+
+  echo "-----> Copying lua to bin"
+  cp "$OPT_DIR/lua" "bin/"
+  cd - > /dev/null
 }
 
 bootstrap_node=$(mktmpdir bootstrap_node)
